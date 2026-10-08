@@ -6,11 +6,13 @@ import uz.ttpu.movieshelf.data.remote.MovieRemoteDataSource
 import uz.ttpu.movieshelf.domain.model.MoviesResult
 import java.io.IOException
 
+
 class MovieRepositoryImpl(
     private val remoteDataSource: MovieRemoteDataSource,
     private val localDataSource: MovieLocalDataSource
-) {
-    suspend fun getMovies(): MoviesResult {
+) : uz.ttpu.movieshelf.domain.repository.MovieRepository {
+
+    override suspend fun getMovies(): MoviesResult {
         return try {
             val remoteMovies = remoteDataSource.fetchMovies()
             localDataSource.saveMovies(remoteMovies)
@@ -32,7 +34,7 @@ class MovieRepositoryImpl(
         }
     }
 
-    suspend fun toggleFavorite(movieId: Int, isFavorite: Boolean) {
+    override suspend fun toggleFavorite(movieId: Int, isFavorite: Boolean) {
         localDataSource.setFavorite(movieId, isFavorite)
     }
 }
